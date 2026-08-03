@@ -1,4 +1,5 @@
-This is a recreation ofthe snake game, had fun playing around with java swing## Getting Started
+##This is a recreation of the snake game, had fun playing around with java swing
+Having spending a great deal of time following a tutorial and learning new things in the process, I was able to explore Swing further
 
 Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
 
