@@ -6,7 +6,6 @@ import java.util.Random;
 
 
 public class Snake extends JPanel implements ActionListener{
-
     static final int BOARD_WIDTH = 660;
     static final int BOARD_HEIGHT = 660;
     static final int COMP_SIZE = 20;
@@ -33,7 +32,6 @@ public class Snake extends JPanel implements ActionListener{
         this.setPreferredSize(new Dimension(BOARD_WIDTH,BOARD_HEIGHT));
         this.addKeyListener(new MyKeyAdapter());
         this.setFocusable(true);
-        background = new ImageIcon(getClass().getResource("/mosticonic.jpeg")).getImage();
         random = new Random();
         applesEaten = 0;
         apple();
@@ -88,7 +86,21 @@ public class Snake extends JPanel implements ActionListener{
         
         
     }
+    public void resumeGame() {
+        int choice = JOptionPane.showOptionDialog(null, "Continue?", "Paused", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
 
+        if(choice == JOptionPane.YES_OPTION) {
+            paused = false;
+            running = true;
+            timer.start();
+        } else {
+            paused = false;
+            running = false;
+            timer.stop();
+            repaint();
+        }
+        
+    }
     public void move() {
         for(int i=bodyParts;i>0;i--) {
             x[i] = x[i-1];
@@ -145,13 +157,13 @@ public class Snake extends JPanel implements ActionListener{
         if(x[0] <0) {
             running = false;
         }
-        if(x[0] >BOARD_WIDTH) {
+        if(x[0] > BOARD_WIDTH) {
             running = false;
         }
          if(y[0] <0) {
             running = false;
         }
-        if(y[0] >BOARD_HEIGHT) {
+        if(y[0] > BOARD_HEIGHT) {
             running = false;
         }
         if(!running) {
@@ -168,10 +180,10 @@ public class Snake extends JPanel implements ActionListener{
         if(running) {
             g.drawImage(background,0,0, BOARD_WIDTH,BOARD_HEIGHT,null);
 
-            //for (int i = 0; i < BOARD_WIDTH / COMP_SIZE; i++) {
-            //g.drawLine(i*COMP_SIZE,0,i*COMP_SIZE,BOARD_WIDTH);
-            //g.drawLine(0,i*COMP_SIZE,BOARD_HEIGHT,i*COMP_SIZE);
-            //}
+            for (int i = 0; i < BOARD_WIDTH / COMP_SIZE; i++) {
+            g.drawLine(i*COMP_SIZE,0,i*COMP_SIZE,BOARD_WIDTH);
+            g.drawLine(0,i*COMP_SIZE,BOARD_HEIGHT,i*COMP_SIZE);
+            }
             g.setColor(new Color(51,36,33));
             g.fillOval(appleX, appleY, COMP_SIZE, COMP_SIZE);
 
@@ -188,7 +200,7 @@ public class Snake extends JPanel implements ActionListener{
                     g.fillOval(x[i],y[i], COMP_SIZE, COMP_SIZE);
                 }
                 else {
-                    g.setColor(new Color(random.nextInt(255),random.nextInt(255),random.nextInt(255)));
+                    g.setColor(new Color(150,205,50));
                     g.fillOval(x[i],y[i], COMP_SIZE, COMP_SIZE);
                 }
 
@@ -198,25 +210,19 @@ public class Snake extends JPanel implements ActionListener{
             g.drawString("Score: " + applesEaten, 10, g.getFont().getSize());
 
         } else{
-            gameOver(g);
+            gameOver();
         }
         
         
     }
-    public void gameOver(Graphics g) {
-        g.setColor(new Color(random.nextInt(255),random.nextInt(255),random.nextInt(255)));
-        g.setFont(new Font("Comfortaa",Font.BOLD, 40 ));
+    public void gameOver() {
+        JLabel gameOverLabel = new JLabel();
+        gameOverLabel.setText("Game Over!\nYour score: " + applesEaten);
+        gameOverLabel.setFont(new Font("Comfortaa", Font.BOLD, 20));
+        gameOverLabel.setForeground(new Color(random.nextInt(255),random.nextInt(255),random.nextInt(255)));        
+        JOptionPane.showMessageDialog(null, gameOverLabel, "Game Over", JOptionPane.INFORMATION_MESSAGE);
+        restartGame();
 
-        FontMetrics metrics = getFontMetrics(g.getFont());
-        
-        String over = "Game Over";
-        String score = "Score: " + applesEaten;
-
-        int overY = BOARD_HEIGHT/2;
-        int scoreY = overY - getFont().getSize()- 30;
-
-        g.drawString(over, (BOARD_WIDTH - metrics.stringWidth(over))/2, overY);
-        g.drawString(score, (BOARD_WIDTH - metrics.stringWidth(score))/2, scoreY );
     }
 
     @Override
@@ -254,9 +260,11 @@ public class Snake extends JPanel implements ActionListener{
                     }
                     break;
                 case KeyEvent.VK_SPACE :
-                    if(running) {
-                        paused =!paused;
-                    } else {
+                    if(running && !paused) {
+                        paused = true;
+                        timer.stop();
+                        resumeGame();
+                    } else if(!running) {
                         restartGame();
                     }
                     break;
