@@ -186,13 +186,13 @@ public class Snake extends JPanel implements ActionListener{
             if((applesEaten + 1) % 10 == 0) {
                 g.setColor(new Color(57,255,20));
             } else {
-                g.setColor(new Color(191,0,255));
+                g.setColor(new Color(191,10,255));
             }
             g.fillOval(appleX, appleY, COMP_SIZE, COMP_SIZE);
 
             for (int i=0;i<bodyParts;i++) {
                 if(i==0) {
-                    g.setColor(Color.RED);
+                    g.setColor(Color.YELLOW);
                     g.fillOval(x[i],y[i], COMP_SIZE, COMP_SIZE);
                 }
                 else {
