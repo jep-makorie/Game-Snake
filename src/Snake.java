@@ -180,17 +180,13 @@ public class Snake extends JPanel implements ActionListener{
         if(running) {
             g.drawImage(background,0,0, BOARD_WIDTH,BOARD_HEIGHT,null);
 
-            for (int i = 0; i < BOARD_WIDTH / COMP_SIZE; i++) {
-            g.drawLine(i*COMP_SIZE,0,i*COMP_SIZE,BOARD_WIDTH);
-            g.drawLine(0,i*COMP_SIZE,BOARD_HEIGHT,i*COMP_SIZE);
-            }
             g.setColor(new Color(51,36,33));
             g.fillOval(appleX, appleY, COMP_SIZE, COMP_SIZE);
 
             if((applesEaten + 1) % 10 == 0) {
                 g.setColor(new Color(57,255,20));
             } else {
-                g.setColor(new Color(51,36,33));
+                g.setColor(new Color(191,0,255));
             }
             g.fillOval(appleX, appleY, COMP_SIZE, COMP_SIZE);
 
